@@ -1,0 +1,408 @@
+TIPOS DE DATOS
+representaciones de los atributos
+Numericos
+-BIT (size)
+-TINYINT (size)
+-BOOL
+-BOOLEAN
+-SMALLINT (size)
+Caracteres-texto
+-CHAR (size)
+-VARCHAR (size)
+-BINARY (size)
+Fecha y tiempo
+-DATE 
+-DATETIME (fsp)
+-TIMESTAMP(fsp)
+
+PRIMARY KEY
+identificador unico y no nulo
+identifica una fila en una bd
+relaciona filas entre tablas
+cada tabla tien una única PK
+
+FOREIGN KEY
+vincula una tabla entre otra tabla
+la que tiene FK es la tabla fija
+PK es la tabla madre
+previene la destruccion de las relaciones
+entre tablas
+prohibe que se inserte data inválida
+
+crear base de datos
+CREATE DATABASE VETERINARIA;
+
+
+
+USE SAKILA;
+
+SHOW TABLES;
+DESCRIBE CITY;
+
+SELECT * FROM CITY;
+
+
+USE SAKILA;
+
+#copiar atributos de otra tabla
+CREATE TABLE KOI
+SELECT city_id, phone, district, location FROM address;
+
+SELECT * FROM KOI;
+
+ALTER TABLE KOI
+DROP COLUMN district;
+
+SELECT * FROM KOI;
+
+#agregar columna
+ALTER TABLE KOI
+ADD COLUMN NUEVO_DISTRICT VARCHAR (20);
+
+SELECT * FROM KOI;
+
+#eliminar tabla
+DROP TABLE KOI;
+
+#truncar tablas
+TRUNCATE TABLE KOI;
+
+
+ALTER TABLE
+Aprender a usar LDD
+
+agregar PK
+ALTER TABLE ZONAS 
+ADD PRIMARY KEY (ID);
+*tambien se puede crear cuando se crea la tabla
+CREATE TABLE grupo5(
+	ID INT NOT NULL,
+    NOMBRE VARCHAR(20),
+    DIR_COD INT NOT NULL,
+    PRIMARY KEY (ID)
+);
+eliminar PK
+ALTER TABLE grupo5
+DROP PRIMARY KEY;
+
+agregar FK
+ALTER TABLE grupo5
+ADD CONSTRAINT FK_ZONASID
+FOREIGN KEY (DIR_COD) REFERENCES ZONAS(ID)
+*tambien se puede crear cuando se crea la tabla
+CREATE TABLE grupo1(
+    ID INT NOT NULL,
+    NOMBRE VARCHAR(20),
+    DIR_COD INT NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (DIR_COD) REFERENCES ZONAS(ID) 
+);
+
+eliminar FK
+ALTER TABLE grupo5
+ADD constraint FK_ZONASID
+FOREIGN KEY (DIR_COD) references ZONAS(ID)
+
+agregar Unique Constraint 
+valores unicos en una columna
+ALTER TABLE grupo1
+ADD CONSTRAINT nombreres UNIQUE (nombre);  
+*tambien se puede crear cuando se crea la tabla
+CREATE TABLE grupo3( 
+    ID INT NOT NULL,
+    NOMBRE VARCHAR(20),
+    DIR_ID INT NOT NULL,
+    PRIMARY KEY (ID),
+    UNIQUE (DIR_ID)
+);
+
+eliminar Unique Constraint 
+ALTER TABLE grupo1 
+DROP INDEX nombreres;
+
+Cambiar el nombre de una columna
+DESC grupo1;
+SELECT * FROM grupo1;
+ALTER TABLE grupo1 CHANGE NOMBRE APELLIDO VARCHAR(8); 
+
+Cambiar el tipo de dato de una columna
+DESC grupo1;
+SELECT * FROM grupo1;
+ALTER TABLE grupo1 MODIFY APELLIDO CHAR(12);
+*la diferencia de varchar y char es que char siempre mide 12
+
+
+Ejercicio
+
+
+OPERACIONES EN SQL
+
+->CRUD
+Create: crear
+Read: leer
+Update: actualizar
+Delete: borrar
+
+Create:inserta nuevos datos
+nueva fila
+INSERT INTO-> crear una fila en una tabla
+CREATE DATABASE ->crear una base de datos
+
+INSERT INTO cliente
+(CI, nombre, apellido, direccion, telefono)
+VALUES
+(163452, "Carmen", "Lara", "Calle 32 B", 52342321);
+
+*PLUS
+CREATE TABLE PRODUCTOS(
+	#el auto_increment hace que el id avance +1
+    ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    NOMBRE VARCHAR(20),
+    PRECIO FLOAT,
+    PROVEEDOR VARCHAR(30)
+);
+
+
+Aprender a usar el LMD
+->insertar datos en una tabla
+INSERT INTO PRODUCTOS (NOMBRE, PRECIO, PROVEEDOR)
+VALUES
+    ("PAPAS LAYS", 2.50,"FRITO LAY"),
+    ("MANTEQUILLA", 1.55,"MANTI"),
+    ("LECHE CONDENSADA", 5.50, "NESTLE");
+
+->actualizar datos en una tabla
+UPDATE PRODUCTOS
+SET PROVEEDOR ="DON PANCHITO"
+WHERE ID=1;
+
+#para utilizar otros campos como condicion
+SET SQL_SAFE_UPDATES=0;
+
+UPDATE PRODUCTOS
+SET PRECIO=3.33, PROVEEDOR="PEPSI"
+WHERE NOMBRE="GASEOSA";
+
+->borrar datos de una tabla
+DELETE FROM PERSONAS
+WHERE PAIS="COLOMBIA";
+
+DELETE FROM PERSONAS;
+
+
+DISEÑO DE BASE DE DATOS
+->Normalizar base de datos
+  -organizar los datos eficientemente
+  -recude espacios de alma
+  -reduce anomalias de LMD
+  -mejora el desempeño de las consultas
+Primera forma normal (FIRST NORMAL FORM)
+  -ninguna fila esta repetida
+  -columnas con valor unico
+  -la tabla tiene PK
+Segunda forma normal (SECOND NORMAL FORM)
+  -sigue las reglas de la 1ra forma normal
+  -las columnas que no son PK son dependientes
+   de la PK ENTERA
+Tercer forma normal (THIRD NORMAL FORM)
+  -sigue las reglas de la 2da forma normal
+  -las columnas no primaria(no son PK) no 
+   dependen de otra columna no primaria
+->Relaciones
+  -relacionadas por los PK y FK
+  -sus columnas están vinculadas y restringuidas
+   entre si
+Relación UNO A UNO (one to one)
+  -se da cuando la KEY de una tabla aparece una 
+   vez como KEY en tra tabla 
+Relación UNO A MUCHOS (one to many)
+Relación MUCHOS A MUCHOS (many to many)
+->Restricciones
+
+
+
+READ
+CREATE TABLE USER(
+	ID INT NOT NULL auto_increment,
+    NAME VARCHAR(30) NOT NULL,
+    EDAD INT NOT NULL,
+    EMAIL VARCHAR(40) NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+INSERT INTO USER (NAME, EDAD, EMAIL)
+VALUES 
+	("Mostaza", 18, "mostazayketchup@edu.pe.com"),
+    ("Carlos", 21, "carlosins@gmail.com"),
+    ("Carla", 30, "carlavidaurre5@gmail.com"),
+    ("Monica", 24, "monicacanimo@hotmail.com");
+
+select * from user;
+select *from user limit 1;
+
+select * from user where edad>20;
+select * from user where edad>=18;
+select * from user where edad>19 and email="carlosins@gmail.com";
+select * from user where edad>20 or email ="mostazayketchup@edu.pe.com";
+select * from user where email != "carlavidaurre5@gmail.com";
+select * from user where edad between 15 and 28;
+select * from user where email like "%gmail%"; 
+--debe termina en la palabra gmail
+select * from user where email like "%gmail";
+select * from user where email like "carlo%"; 
+
+select *from user order by edad asc;
+select *from user order by edad desc;
+ 
+--max y min son funciones
+select max(edad) as mayor from user;
+select min(edad) as menor from user;
+
+select id, name from user;
+--cambiar nombre de name a nombre
+select id, name as nombre from user;
+
+--une dos tablas y muestra desde la tabla principal: join left
+select u.id, u.email, p.name from user u left join product p on u.id=p.created_by;
+--une dos tablas y muestra desde la tabla secundaria: right left
+select u.id, u.email, p.name from user u right join product p on u.id=p.created_by;
+--muestra la interseccion de ambas tablas
+select u.id, u.email, p.name from user u inner join product p on u.id=p.created_by;
+--entrga el producto cartesiano de ambos
+select u.id, u.name,p.id, p.name from user u cross join product p;
+
+Group_by 
+agrupa
+count
+select count(id), marca from product group by marca;
+select count(p.id), u.name from product p left join user u on u.id =p.created_by group by p.created_by;
+--
+select count(p.id), u.name from product p left join user u 
+on u.id =p.created_by group by p.created_by
+having count(p.id)>=2;
+--eliminar tabla
+drop table product;
+
+Cardinalidad:
+relaciones de unas tablas con otras
+
+user id   -> 1
+product id    -> n
+  created_by FK user(id)
+
+
+order  id   n    1
+   product_order id order_id product_id(tabla inter) n
+product   id   n    1
+*product_order por order_detail
+
+-- MySQL Script generated by MySQL Workbench
+-- Sat Jul 23 22:32:03 2022
+-- Model: New Model    Version: 1.0
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`user` (
+  `id` INT NOT NULL,
+  `username` VARCHAR(16) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE);
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`brand`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`brand` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`product`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`product` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `brand_id` INT NOT NULL,
+  `created_by` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `created_by_idx` (`created_by` ASC) VISIBLE,
+  INDEX `brand_id_idx` (`brand_id` ASC) VISIBLE,
+  CONSTRAINT `created_by`
+    FOREIGN KEY (`created_by`)
+    REFERENCES `mydb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `brand_id`
+    FOREIGN KEY (`brand_id`)
+    REFERENCES `mydb`.`brand` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`order`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`order` (
+  `id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `user_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`order_detail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`order_detail` (
+  `id` INT NOT NULL,
+  `order_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  INDEX `fk_order_has_product_product1_idx` (`product_id` ASC) VISIBLE,
+  INDEX `fk_order_has_product_order1_idx` (`order_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_order_has_product_order1`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `mydb`.`order` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_order_has_product_product1`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `mydb`.`product` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
